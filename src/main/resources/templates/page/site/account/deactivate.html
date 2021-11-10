@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="site-content">
+		<th:block
+			th:replace="~{fragment/site/breadcrumb :: breadcrumb(data = 'Block')}"></th:block>
+		<div class="container py-4">
+			<form th:action="deactivate" method="post" class="card my-4 pt-4">
+				<div class="card-body">
+					<input type="hidden" name="id" th:value="${id}" />
+					<h3>Deactivate your account</h3>
+					<br>
+					<p>If you want to temporarily stop using Facebook, you can
+						deactivate your Account. If you want to permanently delete your
+						Facebook Account, let us know.</p>
+					<br>
+					<p>Deactivate the account This action may be temporary. The
+						system will disable your account and remove your name and photo
+						from most of what you've shared. You can continue to use
+						Messenger.</p>
+					<br>
+					<p>When you delete your Facebook account, you won't be able to
+						retrieve the content or information you've shared on Facebook.
+						Messenger and all your Messages will also be deleted.</p>
+
+				</div>
+				<div class="card-footer py-3">
+					<button class="btn btn-danger">Continue and deactivate the
+						account</button>
+				</div>
+			</form>
+		</div>
+	</th:block>
+</body>
+</html>

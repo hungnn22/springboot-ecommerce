@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="site-content">
+		<th:block
+			th:replace="~{fragment/site/breadcrumb :: breadcrumb(data = 'Cart')}"></th:block>
+		<div th:if="${cartItems > 0}" class="shopping-cart section">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<!-- Shopping Summery -->
+						<table class="table shopping-summery">
+							<thead>
+								<tr class="main-hading">
+									<th>PRODUCT</th>
+									<th>NAME</th>
+									<th>SIZE</th>
+									<th>COLOR</th>
+									<th class="text-center">PRICE</th>
+									<th class="text-center">QUANTITY</th>
+									<th class="text-center">TOTAL</th>
+									<th class="text-center">
+										<a th:href="@{/carts/remove/all}">
+											<i class="ti-trash remove-icon"></i>
+										</a>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item : ${orderDetails}">
+									<td class="image" data-title="No">
+										<img style="object-fit: cover;"
+											th:src="@{{photoUrl}(photoUrl = ${item.product.photos[0].url})}"
+											alt="#">
+									</td>
+									<td class="product-des" data-title="Description">
+										<p class="product-name">
+											<a th:href="@{/products(id = ${item.product.id})}">[[${item.product.name}]]</a>
+										</p>
+										<p class="product-des">[[${item.product.des}]]</p>
+									</td>
+									<td>[[${item.product.size.value}]]</td>
+									<td>[[${item.product.color.name}]]</td>
+									<td class="price" data-title="Price">
+										<span>[[${item.price}]] </span>
+									</td>
+									<td class="qty px-2" data-title="Qty">
+										<!-- Input Order -->
+
+										<a class="mx-1"
+											th:href="@{/carts/update/{id}(id = ${item.id}, qty = ${item.qty - 1})}">
+											<i class="ti-minus"></i>
+										</a>
+										<span class="mx-2">[[${item.qty}]]</span>
+
+										<a class="mx-1"
+											th:href="@{/carts/update/{id}(id = ${item.id}, qty = ${item.qty + 1})}">
+											<i class="ti-plus"></i>
+										</a>
+										<!--/ End Input Order -->
+									</td>
+									<td class="total-amount" data-title="Total">
+										<span>[[${item.price * item.qty}]]</span>
+									</td>
+									<td class="action" data-title="Remove">
+										<a th:href="@{/carts/remove/{id}(id = ${item.id})}">
+											<i class="ti-trash remove-icon"></i>
+										</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<!--/ End Shopping Summery -->
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<!-- Total Amount -->
+						<div class="total-amount">
+							<div class="row">
+								<div class="col-lg-8 col-md-5 col-12"></div>
+								<div class="col-lg-4 col-md-7 col-12">
+									<div class="right">
+										<ul>
+											<li>
+												Cart Totals
+												<span>$[[${cartTotals}]]</span>
+											</li>
+											<li>
+												Shipping
+												<span>Free</span>
+											</li>
+
+										</ul>
+										<div class="button5">
+											<a th:href="@{/checkout}" class="btn btn-dark">Checkout</a>
+											<a th:href="@{/}" class="btn btn-dark">Continue shopping</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--/ End Total Amount -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:unless="${cartItems > 0}" class="container py-4 my-4"
+			style="min-height: 50vh">
+			<span class="h4 text-muted">Your cart is empty...</span>
+		</div>
+
+	</th:block>
+</body>
+</html>

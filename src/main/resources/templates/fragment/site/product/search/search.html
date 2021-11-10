@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="product-area section" th:fragment="product-area(data)">
+		<div class="container">
+			<div class="row">
+				<div class="section-title mx-auto">
+					<h2>[[${data}]] Fashion</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="product-info">
+						<div
+							class="nav-main header shop row d-flex justify-content-between">
+							<div class="dropdown show">
+
+								<a href="#" role="button" id="dropdownMenuLink"
+									data-toggle="dropdown" aria-haspopup="true" class=""
+									aria-expanded="false">
+									Filter
+									<i class="fa fa-filter" aria-hidden="true"></i>
+								</a>
+
+
+								<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+									<a class="dropdown-item row d-flex justify-content-between"
+										th:href="@{/products(page = ${page}, sort = 'price', order = 'asc', categoryId = ${categoryId}, search = ${search})}">
+										Low to high: Price </a>
+									<a class="dropdown-item row d-flex justify-content-between"
+										th:href="@{/products(page = ${page}, sort = 'price', order = 'desc', categoryId = ${categoryId}, search = ${search})}">
+										High to low: Price </a>
+									<a class="dropdown-item row d-flex justify-content-between"
+										th:href="@{/products(page = ${page}, sort = 'name', order = 'asc', categoryId = ${categoryId}, search = ${search})}">
+										A-Z: Name </a>
+									<a class="dropdown-item row d-flex justify-content-between"
+										th:href="@{/products(page = ${page}, sort = 'name', order = 'desc', categoryId = ${categoryId}, search = ${search})}">
+										Z-A: Name </a>
+								</div>
+							</div>
+						</div>
+						<div class="tab-content" id="myTabContent">
+							<div class="tab-pane fade show active" th:id="'cate_tab' + cate"
+								role="tabpanel">
+								<div class="tab-single">
+									<div class="row">
+										<th:block th:each="product : ${products}">
+											<div class="col-xl-3 col-lg-4 col-md-4 col-12">
+												<div class="single-product">
+													<div class="product-img">
+														<a href="#">
+															<img class="default-img" style="object-fit: cover;"
+																th:src="@{{url}(url = ${product.photos[0].url})}"
+																alt="#">
+															<img th:if="${product.photos.size > 1}" class="hover-img"
+																th:src="@{{url}(url = ${product.photos[1].url})}"
+																alt="#">
+															<span
+																th:class="${product.id % 2 == 0 ? 'new' : product.id % 3 == 0 ? 'out-of-stock' : 'price-dec'}"
+																th:text="${product.id % 2 == 0 ? 'New' : product.id % 3 == 0 ? 'Hot' : 'Sale'}"></span>
+														</a>
+														<div class="button-head">
+															<div class="product-action">
+																<a data-toggle="modal"
+																	th:data-target="'#modal' + ${product.id}"
+																	title="Quick View" href="#">
+																	<i class=" ti-eye"></i>
+																	<span>Quick Shop</span>
+																</a>
+																<a title="Wishlist" href="#">
+																	<i class=" ti-heart "></i>
+																	<span>Add to Wishlist</span>
+																</a>
+																<a title="Compare" href="#">
+																	<i class="ti-bar-chart-alt"></i>
+																	<span>Add to Compare</span>
+																</a>
+															</div>
+															<div class="product-action-2">
+																<a title="Add to cart"
+																	th:href="@{/carts/add/{productId}(productId = ${product.id})}">Add
+																	to cart</a>
+															</div>
+														</div>
+													</div>
+													<div class="product-content">
+														<h3>
+															<a th:href="@{/products(id = ${product.id})}">[[${product.name}]]</a>
+														</h3>
+														<div class="product-price">
+															<span>$[[${product.price}]]</span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<th:block
+												th:replace="~{fragment/site/home/modal :: modal(product = ${product})}"></th:block>
+										</th:block>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div
+				class="row mt-5 d-flex justify-content-center align-items-center">
+				<button class="btn btn-dark mx-1 disabled" th:if="${response.first}">Prev</button>
+				<button class="btn btn-dark mx-1" th:unless="${response.first}">
+					<a
+						th:href="@{/products(page = ${page - 1}, sort = ${sort}, order = ${order}, categoryId = ${categoryId}, search = ${search})}">Prev</a>
+				</button>
+
+				<button class="btn btn-dark mx-1 disabled" th:if="${response.last}">Next</button>
+				<button class="btn btn-dark mx-1" th:unless="${response.last}">
+					<a
+						th:href="@{/products(page = ${page + 1}, sort = ${sort}, order = ${order}, categoryId = ${categoryId}, search = ${search})}">Next</a>
+				</button>
+				<span class="mx-1 float-right">Page: [[${page}]] /
+					[[${totalPages}]]</span>
+
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

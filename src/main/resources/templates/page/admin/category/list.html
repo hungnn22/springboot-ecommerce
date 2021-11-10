@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/admin-layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="admin-content">
+		<th:block
+			th:replace="~{fragment/admin/breadcrumb :: breadcrumb(breadPara = 'Category List')}"></th:block>
+		<table class="table">
+			<div class="card">
+				<div
+					class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+					<a class="btn btn-primary" th:href="@{/admin/categories/add}">
+						<h6 class="m-0 font-weight-bold">New Category</h6>
+					</a>
+
+					<div class="dropdown">
+						<a class="btn btn-danger btn-sm" href="#" id="limitlist"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Show Option
+							<i class="fas fa-chevron-right"></i>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="limitlist">
+							<a class="dropdown-item" th:href="@{/admin/categories}">5</a>
+							<a class="dropdown-item"
+								th:href="@{/admin/categories(limit = '10')}">10</a>
+							<a class="dropdown-item"
+								th:href="@{/admin/categories(limit = '20')}">20</a>
+							<a class="dropdown-item"
+								th:href="@{/admin/categories(limit = '50')}">50</a>
+						</div>
+					</div>
+				</div>
+				<div class="table-responsive mh-100">
+					<table class="table align-items-center table-flush">
+						<thead class="thead-light">
+							<tr>
+								<th>No</th>
+								<th>
+									<th:block
+										th:replace="~{fragment/admin/category/filter :: filter(name = 'Name', page = ${page},
+										 limit = ${limit}, sort = 'name', order = ${reveser}, search = ${search})}"></th:block>
+								</th>
+								<th>
+									<span class="text-danger">Delete?</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody th:if="${categories.size > 0}">
+							<tr th:each="category, state : ${categories}">
+								<td>[[${(page - 1) * limit + state.count}]]</td>
+								<td>
+									<a th:href="@{/admin/categories/{id}(id = ${category.id})}">
+										[[${category.name}]] </a>
+								</td>
+								<td>
+									<button data-toggle="modal"
+										th:data-target="'#deleteModal' + ${category.id}"
+										class="btn btn-default mx-auto shadow bg-white rounded">
+										<i class="fas fa-trash text-danger"></i>
+									</button>
+
+									<!-- Modal -->
+									<div class="modal fade" th:id="'deleteModal' + ${category.id}"
+										tabindex="-1" role="dialog" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title text-bold">Delete
+														Category</h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													Are you sure delete
+													<span class="text-danger">[[${category.name}]]</span>
+													?
+													<br>
+													<span class="text-danger">*Warning: </span>
+													Deleting this category may result in loss of related data!
+
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary"
+														data-dismiss="modal">Close</button>
+													<a
+														th:href="@{/admin/categories/delete/{id}(id = ${category.id})}"
+														class="btn btn-danger">Delete</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div th:unless="${categories.size > 0}" class="my-5">
+						<span class="text-muted h4">No Result...</span>
+					</div>
+				</div>
+				<div class="card-footer">
+					<div th:if="${categories.size > 0}"
+						class="d-flex justify-content-start align-items-center">
+						<button th:if="${response.first}"
+							class="btn btn-light mx-1 disabled">Prev</button>
+						<button th:unless="${response.first}" class="btn btn-light mx-1">
+							<th:block
+								th:replace="~{fragment/admin/category/filter :: filter(name = 'Prev', page = ${page - 1},
+										 limit = ${limit}, sort = ${sort}, order = ${order}, search = ${search})}"></th:block>
+						</button>
+						<button th:if="${response.last}"
+							class="btn btn-light mx-1 disabled">Next</button>
+						<button th:unless="${response.last}" class="btn btn-light mx-1">
+							<th:block
+								th:replace="~{fragment/admin/category/filter :: filter(name = 'Next', page = ${page + 1},
+										 limit = ${limit}, sort = ${sort}, order = ${order},search = ${search})}"></th:block>
+						</button>
+
+						<span class="mx-1">Page [[${page}]] / [[${totalPages}]]</span>
+
+					</div>
+				</div>
+
+			</div>
+
+
+		</table>
+	</th:block>
+</body>
+</html>

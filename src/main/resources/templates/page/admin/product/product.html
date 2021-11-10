@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/admin-layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="admin-content">
+		<th:block
+			th:replace="~{fragment/admin/breadcrumb :: breadcrumb(breadPara = 'Product List')}"></th:block>
+		<table class="table">
+			<div class="card">
+				<div
+					class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+					<a class="btn btn-primary" th:href="@{/admin/products/add}">
+						<h6 class="m-0 font-weight-bold">New Product</h6>
+					</a>
+
+					<div class="dropdown">
+						<a class="btn btn-danger btn-sm" href="#" id="limitlist"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Show Option
+							<i class="fas fa-chevron-right"></i>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="limitlist">
+							<a class="dropdown-item" th:href="@{/admin/products}">5</a>
+							<a class="dropdown-item"
+								th:href="@{/admin/products(limit = '10')}">10</a>
+							<a class="dropdown-item"
+								th:href="@{/admin/products(limit = '20')}">20</a>
+							<a class="dropdown-item"
+								th:href="@{/admin/products(limit = '50')}">50</a>
+						</div>
+					</div>
+				</div>
+				<div class="table-responsive mh-100">
+					<table class="table align-items-center table-flush">
+						<thead class="thead-light">
+							<tr>
+								<th>No</th>
+								<th>
+									<th:block
+										th:replace="~{fragment/admin/product/filter :: filter(name = 'Name', page = ${page},
+										 limit = ${limit}, sort = 'name', order = ${reveser},
+										  categoryId = ${categoryId}, search = ${search})}"></th:block>
+
+								</th>
+								<th>
+									<th:block
+										th:replace="~{fragment/admin/product/filter :: filter(name = 'Price', page = ${page},
+										 limit = ${limit}, sort = 'price', order = ${reveser},
+										  categoryId = ${categoryId}, search = ${search})}"></th:block>
+								</th>
+								<th>
+									<th:block
+										th:replace="~{fragment/admin/product/filter :: filter(name = 'Quantity', page = ${page},
+										 limit = ${limit}, sort = 'qty', order = ${reveser},
+										  categoryId = ${categoryId}, search = ${search})}"></th:block>
+								</th>
+								<th>Size</th>
+								<th>Colors</th>
+								<th>Photo</th>
+								<th>
+									<div class="dropdown">
+										<a class="dropdown-toggle text-primary" id="dropdownMenu2"
+											data-toggle="dropdown" aria-haspopup="true"
+											aria-expanded="false">Category </a>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+											<a class="dropdown-item" th:href="@{/admin/products}">All</a>
+											<a th:each="cate : ${categories}" class="dropdown-item"
+												th:href="@{/admin/products(categoryId = ${cate.id})}">
+												[[${cate.name}]] </a>
+										</div>
+									</div>
+								</th>
+								<th>
+									<th:block
+										th:replace="~{fragment/admin/product/filter :: filter(name = 'Date', page = ${page},
+										 limit = ${limit}, sort = 'createAt', order = ${reveser},
+										  categoryId = ${categoryId}, search = ${search})}"></th:block>
+								</th>
+								<th>
+									<span class="text-danger">Delete?</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody th:if="${products.size > 0}">
+							<tr th:each="product, state : ${products}">
+								<td>[[${(page - 1) * limit + state.count}]]</td>
+								<td>
+									<a th:href="@{/admin/products/{id}(id = ${product.id})}">
+										[[${product.name}]] </a>
+								</td>
+								<td>$[[${product.price}]]</td>
+								<td>
+									<span th:if="${product.qty > 0}" class="badge badge-success">[[${product.qty}]]
+										In Stock</span>
+									<span th:unless="${product.qty > 0}" class="badge badge-danger">Sold
+										out</span>
+								</td>
+								<td>[[${product.size.value}]]</td>
+								<td>[[${product.color.name}]]</td>
+								<td>
+									<img th:title="${product.des}"
+										th:src="${product.photos[0].url}"
+										style="width: 4rem; height: 4rem; object-fit: cover; border-radius: 4rem;">
+								</td>
+								<td>[[${product.category.name}]]</td>
+								<td>[[${product.createAt}]]</td>
+								<td>
+									<button data-toggle="modal"
+										th:data-target="'#deleteModal' + ${product.id}"
+										class="btn btn-default mx-auto shadow bg-white rounded">
+										<i class="fas fa-trash text-danger"></i>
+									</button>
+
+									<!-- Modal -->
+									<div class="modal fade" th:id="'deleteModal' + ${product.id}"
+										tabindex="-1" role="dialog" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title text-bold" id="exampleModalLabel">Delete
+														Product</h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													Are you sure delete
+													<span class="text-danger">[[${product.name}]]</span>
+													?
+													<br>
+													<span class="text-danger">*Warning: </span>
+													Deleting this product may result in loss of related data!
+
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary"
+														data-dismiss="modal">Close</button>
+													<a
+														th:href="@{/admin/products/delete/{id}(id = ${product.id})}"
+														class="btn btn-danger">Delete</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div th:unless="${products.size > 0}" class="my-5">
+						<span class="text-muted h4">No Result...</span>
+					</div>
+				</div>
+				<div class="card-footer">
+					<div th:if="${products.size > 0}"
+						class="d-flex justify-content-start align-items-center">
+						<button th:if="${response.first}"
+							class="btn btn-light mx-1 disabled">Prev</button>
+						<button th:unless="${response.first}" class="btn btn-light mx-1">
+							<th:block
+								th:replace="~{fragment/admin/product/filter :: filter(name = 'Prev', page = ${page - 1},
+										 limit = ${limit}, sort = ${sort}, order = ${order},
+										  categoryId = ${categoryId}, search = ${search})}"></th:block>
+						</button>
+						<button th:if="${response.last}"
+							class="btn btn-light mx-1 disabled">Next</button>
+						<button th:unless="${response.last}" class="btn btn-light mx-1">
+							<th:block
+								th:replace="~{fragment/admin/product/filter :: filter(name = 'Next', page = ${page + 1},
+										 limit = ${limit}, sort = ${sort}, order = ${order},
+										  categoryId = ${categoryId}, search = ${search})}"></th:block>
+						</button>
+
+						<span class="mx-1">Page [[${page}]] / [[${totalPages}]]</span>
+
+					</div>
+				</div>
+
+			</div>
+
+
+		</table>
+	</th:block>
+</body>
+</html>

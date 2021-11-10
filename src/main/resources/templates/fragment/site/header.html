@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<header class="header shop" th:fragment="header">
+		<!-- Topbar -->
+		<div class="topbar">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-4 col-md-12 col-12">
+						<!-- Top Left -->
+						<div class="top-left">
+							<ul class="list-main">
+								<li>
+									<i class="ti-headphone-alt"></i>
+									+000 (000) 000-000
+								</li>
+								<li>
+									<i class="ti-email"></i>
+									hungnn22.com
+								</li>
+							</ul>
+						</div>
+						<!--/ End Top Left -->
+					</div>
+					<div class="col-lg-8 col-md-12 col-12">
+						<!-- Top Right -->
+						<div class="right-content">
+							<ul class="list-main">
+								<li>
+									<i class="ti-location-pin"></i>
+									Store location
+								</li>
+								<li>
+									<i class="ti-alarm-clock"></i>
+									<a href="#">Daily deal</a>
+								</li>
+								<li>
+									<i class="ti-user"></i>
+									<a th:if="${session.account != null}"
+										th:href="@{/accounts(id = ${session.account.id})}">My
+										account</a>
+									<span th:unless="${session.account != null}">My account</span>
+								</li>
+								<li>
+									<i class="ti-power-off"></i>
+									<a
+										th:href="@{${session.account != null ? '/logout' : '/login'}}"
+										th:text="${session.account != null ? 'Logout' : 'Login'}"></a>
+								</li>
+							</ul>
+						</div>
+						<!-- End Top Right -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Topbar -->
+		<div class="middle-inner">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-2 col-md-2 col-12">
+						<!-- Logo -->
+						<div class="logo">
+							<a href="#">Shop</a>
+						</div>
+						<!--/ End Logo -->
+						<!-- Search Form -->
+						<div class="search-top">
+							<div class="top-search">
+								<a href="#0">
+									<i class="ti-search"></i>
+								</a>
+							</div>
+							<!-- Search Form -->
+							<div class="search-top">
+								<form class="search-form">
+									<input type="text" placeholder="Search here..." name="search">
+									<button value="search" type="button">
+										<i class="ti-search"></i>
+									</button>
+								</form>
+							</div>
+							<!--/ End Search Form -->
+						</div>
+						<!--/ End Search Form -->
+						<div class="mobile-nav"></div>
+					</div>
+					<div class="col-lg-8 col-md-7 col-12">
+						<div class="search-bar-top">
+							<div class="search-bar-top">
+								<form class="search-bar form" th:action="@{/products}"
+									method="get">
+									<select name="categoryId">
+										<option th:value="'-1'">All</option>
+										<th:block th:each="category : ${categories}">
+											<option th:value="${category.id}">
+												[[${category.name}]]</option>
+										</th:block>
+									</select>
+									<div>
+										<input name="search" placeholder="Search Here....."
+											type="search">
+										<button class="btnn">
+											<i class="ti-search"></i>
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-12">
+						<div class="right-bar">
+							<!-- Search Form -->
+							<div class="sinlge-bar">
+								<a href="#" class="single-icon">
+									<i class="fa fa-heart-o" aria-hidden="true"></i>
+								</a>
+							</div>
+							<div class="sinlge-bar">
+								<a href="#" class="single-icon">
+									<i class="fa fa-user-circle-o" aria-hidden="true"></i>
+								</a>
+							</div>
+							<div class="sinlge-bar shopping">
+								<a href="#" class="single-icon">
+									<i class="ti-bag"></i>
+									<span th:if="${cartItems > 0}" class="total-count"
+										th:text="${cartItems}"></span>
+								</a>
+								<!-- Shopping Item -->
+								<div class="shopping-item">
+									<div class="dropdown-cart-header">
+										<span>
+											<span th:text="${cartItems > 0 ? cartItems : '0'}"></span>
+											Items
+										</span>
+										<a th:href="@{/carts}">View Cart</a>
+									</div>
+									<ul class="shopping-list">
+										<li th:each="item : ${orderDetails}">
+											<!-- <a th:href="@{/carts/remove/{id}(id = ${item.id})}"
+												class="remove" title="Remove this item">
+												<i class="fa fa-remove"></i>
+											</a> -->
+											<a class="cart-img" href="#">
+												<img
+													th:src="@{{photoUrl}(photoUrl = ${item.product.photos[0].url})}"
+													style="object-fit: cover" alt="#">
+											</a>
+											<h4>
+												<a th:href="@{/products(id = ${item.product.id})}">[[${item.product.name}]]</a>
+											</h4>
+											<p class="quantity">
+												[[${item.qty}]] x
+												<span class="amount">$[[${item.product.price}]]</span>
+											</p>
+										</li>
+
+									</ul>
+									<div class="bottom">
+										<div class="total">
+											<span>Total</span>
+											<span class="total-amount">$[[${cartTotals}]]</span>
+										</div>
+										<a th:href="@{/checkout}" class="btn animate">Checkout</a>
+									</div>
+								</div>
+								<!--/ End Shopping Item -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Header Inner -->
+		<div class="header-inner">
+			<div class="container">
+				<div class="cat-nav-head">
+					<div class="row">
+						<div class="menu-area">
+							<!-- Main Menu -->
+							<nav class="navbar navbar-expand-lg">
+								<div class="navbar-collapse">
+									<div class="nav-inner">
+										<ul class="nav main-menu menu navbar-nav">
+											<li class="active">
+												<a th:href="@{/}">Home</a>
+											</li>
+											<li>
+												<a href="#">Product</a>
+											</li>
+											<li>
+												<a href="#">
+													Category
+													<i class="ti-angle-down"></i>
+													<span class="new">New</span>
+												</a>
+												<ul class="dropdown">
+
+													<th:block th:each="category : ${categories}">
+														<li>
+															<a th:href="@{/products(categoryId = ${category.id})}">[[${category.name}]]</a>
+														</li>
+													</th:block>
+												</ul>
+											</li>
+											<li>
+												<a th:href="@{/carts}">Cart</a>
+											</li>
+											<li th:if="${session.account != null}">
+												<a th:href="@{/orders}"> Shopping History </a>
+											</li>
+											<li>
+												<a href="#">Contact Us</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</nav>
+							<!--/ End Main Menu -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--/ End Header Inner -->
+	</header>
+</body>
+</html>

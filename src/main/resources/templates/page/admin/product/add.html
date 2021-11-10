@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/admin-layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+	<th:block layout:fragment="admin-content">
+		<th:block
+			th:replace="~{fragment/admin/breadcrumb :: breadcrumb(breadPara = 'Add Product')}"></th:block>
+		<table class="table">
+			<form class="card form" method="post" action="#"
+				th:action="@{/admin/products/add}" enctype="multipart/form-data"
+				onsubmit="return handleSubmitForm(this)" th:object="${product}">
+				<p th:if="${sucMess}" class="text-success">[[${sucMess}]]</p>
+				<div class="row">
+					<div class="col-4">
+						<div class="form-group mb-3">
+							<label>Category</label>
+							<select class="form-control bg-light" th:field="*{category}">
+								<option th:each="cate : ${categories}" th:value="${cate.id}">[[${cate.name}]]</option>
+							</select>
+						</div>
+						<div class="form-group mb-3">
+							<label>
+								Name
+								<span class="text-danger">*</span>
+							</label>
+							<input class="form-control" th:field="*{name}"
+								required="required">
+							<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+								class="text-danger" />
+						</div>
+						<div class="form-group mb-3">
+							<label>
+								Price
+								<span class="text-danger">*</span>
+							</label>
+							<input class="form-control" th:field="*{price}" type="number"
+								required="required">
+							<p th:if="${#fields.hasErrors('price')}" th:errors="*{price}"
+								class="text-danger" />
+						</div>
+						<div class="form-group mb-3">
+							<label>
+								Quantity
+								<span class="text-danger">*</span>
+							</label>
+							<input class="form-control" th:field="*{qty}" type="number"
+								required="required">
+							<p th:if="${#fields.hasErrors('qty')}" th:errors="*{qty}"
+								class="text-danger" />
+						</div>
+						<div class="form-group mb-3 row d-flex justify-content-between">
+							<div class="col-5">
+								<label>Color</label>
+								<select class="form-control bg-light" th:field="*{color}">
+									<option th:each="color : ${colors}" th:value="${color.id}">[[${color.name}]]</option>
+								</select>
+							</div>
+							<div class="col-5">
+								<label>Size</label>
+								<select class="form-control bg-light" th:field="*{size}">
+									<option th:each="size : ${sizes}" th:value="${size.id}">[[${size.value}]]</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group mb-3">
+							<label>Description</label>
+							<textarea rows="4" class="form-control" th:field="*{des}"></textarea>
+						</div>
+
+					</div>
+					<div class="col px-5">
+						<hr>
+						<div class="row">
+							<label class="btn btn-primary" for="image_uploads">
+								Choose images to upload
+								<span class="text-danger">*</span>
+							</label>
+							<input readonly type="file" id="image_uploads"
+								required="required" name="image_uploads"
+								accept=".jpg, .jpeg, .png" multiple>
+						</div>
+						<div class="preview row">
+							<p th:if="${errMess}" class="text-danger">[[${errMess}]]</p>
+						</div>
+					</div>
+				</div>
+				<div class="d-flex justify-content-start align-items-center mt-4">
+					<button class="btn btn-primary">Save</button>
+					<a class="btn btn-light mx-2" th:href="@{/admin/products}">Back</a>
+				</div>
+
+			</form>
+		</table>
+		<script type="text/javascript" th:src="@{/admin/js/product.js}"></script>
+
+
+	</th:block>
+</body>
+</html>

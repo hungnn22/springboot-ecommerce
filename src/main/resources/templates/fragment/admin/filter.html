@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block th:fragment="filter(name, page, limit, sort, order, search)">
+		<form id="myForm" method="get"
+			th:action="@{/admin/{url}(url = ${endPoint})}">
+			<input th:if="${page != 1}" hidden="hidden" name="page"
+				th:value="${page != 1 ? page : ''}">
+			<input th:if="${limit != 5}" hidden="hidden" name="limit"
+				th:value="${limit}">
+			<input th:if="${sort != 'createAt' || sort != 'name'}"
+				hidden="hidden" name="sort" th:value="${sort}">
+			<input th:if="${order != 'desc'}" hidden="hidden" name="order"
+				th:value="${order}">
+			<input th:if="${search != ''}" hidden="hidden" name="search"
+				th:value="${search}">
+			<a class="text-link"
+				onclick='this.parentNode.submit(); return false;' href="#">[[${name}]]</a>
+		</form>
+	</th:block>
+</body>
+</html>

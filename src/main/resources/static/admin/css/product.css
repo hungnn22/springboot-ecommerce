@@ -1,0 +1,21 @@
+svg:not(:root) {
+	display: block;
+}
+
+.preview li, div->p {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1rem 0;
+}
+
+.preview img {
+	height: 64px;
+	width: auto;
+	object-fit: cover;
+	order: 1;
+}
+
+.preview p {
+	line-height: 32px;
+}

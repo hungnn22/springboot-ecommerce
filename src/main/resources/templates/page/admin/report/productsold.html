@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/admin-layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="admin-content">
+		<th:block
+			th:replace="~{fragment/admin/breadcrumb :: breadcrumb(breadPara = 'Report: Product Sold')}"></th:block>
+		<div class="card mb-4">
+			<div
+				class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+				<h6 class="m-0 font-weight-bold text-primary">
+					<a th:href="@{/admin/reports/productsold}">
+						<i class="fa fa-tasks" aria-hidden="true"></i>
+					</a>
+					/
+					<a th:href="@{/admin/reports/productsold(view='table')}"
+						class="text-light">
+						<i class="fa fa-table" aria-hidden="true"></i>
+					</a>
+				</h6>
+				<div class="dropdown no-arrow">
+					<a class="dropdown-toggle btn btn-primary btn-sm" href="#"
+						role="button" id="dropdownMenuLink" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false">
+						Time Option
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div
+						class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+						aria-labelledby="dropdownMenuLink">
+						<div class="dropdown-header">Select Periode</div>
+						<a class="dropdown-item" th:href="@{/admin/reports/productsold}">Today</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(time = 'week')}">Week</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(time = 'month')}">Month</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(time = 'year')}">This
+							Year</a>
+					</div>
+				</div>
+			</div>
+			<div class="card-body">
+				<div class="mb-3" th:each="item, state : ${reports}">
+					<div class="small text-gray-500">
+						[[${item[1]}]] ($[[${item[4]}]])
+						<div class="small float-right">
+							<b>[[${item[3]}]] of [[${item[2]}]] Items</b>
+						</div>
+					</div>
+					<div class="progress" style="height: 12px;">
+						<div class="progress-bar" role="progressbar"
+							th:classappend="${state.count % 2 == 0 ? 'bg-danger' : state.count % 3 == 0 ? 'bg-success' : state.count % 4 == 0 ? 'bg-danger' :  state.count % 5 == 0 ? 'bg-warning' : 'bg-secondary'}"
+							th:style="'width:'+${item[3] * 100 / (item[2] + item[3])}+'%'"
+							aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer">
+				<div class="dropdown">
+					<a class="btn btn-danger btn-sm" href="#" id="limitlist"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Show Option
+						<i class="fas fa-chevron-right"></i>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="limitlist">
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(time = ${time})}">5</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(limit = '10', time = ${time})}">10</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(limit = '20', time = ${time})}">20</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(limit = '50', time = ${time})}">50</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</th:block>
+</body>
+</html>

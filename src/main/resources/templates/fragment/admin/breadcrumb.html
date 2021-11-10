@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="d-sm-flex align-items-center justify-content-between mb-4"
+		th:fragment="breadcrumb(breadPara)">
+		<h1 class="h3 mb-0 text-gray-800">[[${breadPara}]]</h1>
+		<!-- 		<ol class="breadcrumb">
+			<li class="breadcrumb-item">
+				<a th:href="@{/admin/}">Home</a>
+			</li>
+			<li class="breadcrumb-item active" aria-current="page">[[${breadPara}]]</li>
+		</ol> -->
+	</div>
+
+</body>
+</html>

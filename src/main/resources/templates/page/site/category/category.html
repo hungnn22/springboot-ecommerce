@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="site-content">
+		<th:block
+			th:replace="~{fragment/site/breadcrumb :: breadcrumb(data = ${category.name})}"></th:block>
+		<th:block
+			th:replace="~{fragment/site/category/category :: product-area(data = ${category.name})}"></th:block>
+		<th:block th:replace="~{fragment/site/product/detail/related :: related}"></th:block>
+		<th:block th:replace="~{fragment/site/home/cown-down :: cown-down}"></th:block>
+		<th:block th:replace="~{fragment/site/home/blog :: blog}"></th:block>
+		<th:block th:replace="~{fragment/site/home/service :: service}"></th:block>
+		<th:block th:replace="~{fragment/site/home/new :: new}"></th:block>
+	</th:block>
+</body>
+</html>

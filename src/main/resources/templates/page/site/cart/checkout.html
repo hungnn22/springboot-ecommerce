@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="site-content">
+		<th:block
+			th:replace="~{fragment/site/breadcrumb :: breadcrumb(data = 'Checkout')}"></th:block>
+		<div class="container py-4 my-4">
+			<div class="row g-4 d-flex justify-content-between">
+				<div class="col-7">
+					<span class="h4">Ship Address</span>
+					<hr>
+				</div>
+				<div class="col-4">
+					<span class="h4">Cart Info</span>
+					<hr>
+				</div>
+			</div>
+			<div class="row g-4 d-flex justify-content-between">
+				<form action="#" th:action="@{/checkout}" class="col-7" method="post"
+					th:object="${checkout}">
+					<div class="form-group mb-3">
+						<label>Name</label>
+						<input class="form-control" readonly="readonly"
+							th:value="${session.account != null ? session.account.name : ''}">
+					</div>
+					<div class="form-group mb-3">
+						<label>Phone</label>
+						<input class="form-control" th:field="*{phone}">
+						<p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"
+							class="text-danger" />
+					</div>
+					<div class="form-group mb-3">
+						<label>Addess</label>
+						<input class="form-control" th:field="*{address}">
+						<p th:if="${#fields.hasErrors('address')}" th:errors="*{address}"
+							class="text-danger" />
+					</div>
+					<div class="form-group mb-3">
+						<label>Note</label>
+						<textarea class="form-control" rows="3" th:field="*{note}"></textarea>
+					</div>
+					<button class="btn btn-dark">Buy</button>
+				</form>
+				<div class="col-4">
+					<ul th:if="${cartItems > 0}" class="list-group">
+						<li th:each="item : ${orderDetails}"
+							class="list-group-item d-flex justify-content-between py-4">
+							<span> [[${item.product.name}]] </span>
+							<span>[[${item.qty}]] x $[[${item.price}]]</span>
+						</li>
+						<li class="list-group-item bg-dark text-light">
+							<span class="float-right">Cart total: $[[${cartTotals}]]</span>
+						</li>
+					</ul>
+
+				</div>
+			</div>
+		</div>
+
+	</th:block>
+</body>
+</html>

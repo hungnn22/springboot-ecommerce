@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/admin-layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="admin-content">
+		<th:block
+			th:replace="~{fragment/admin/breadcrumb :: breadcrumb(breadPara = 'Account List')}"></th:block>
+		<table class="table">
+			<div class="card">
+				<div
+					class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+					<a class="btn btn-primary" th:href="@{/admin/accounts/add}">
+						<h6 class="m-0 font-weight-bold">New Account</h6>
+					</a>
+
+					<div class="dropdown">
+						<a class="btn btn-danger btn-sm" href="#" id="limitlist"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Show Option
+							<i class="fas fa-chevron-right"></i>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="limitlist">
+							<a class="dropdown-item" th:href="@{/admin/accounts}">5</a>
+							<a class="dropdown-item"
+								th:href="@{/admin/accounts(limit = '10')}">10</a>
+							<a class="dropdown-item"
+								th:href="@{/admin/accounts(limit = '20')}">20</a>
+							<a class="dropdown-item"
+								th:href="@{/admin/accounts(limit = '50')}">50</a>
+						</div>
+					</div>
+				</div>
+				<div class="table-responsive mh-100">
+					<table th:if="${accounts.size > 0}"
+						class="table align-items-center table-flush">
+						<thead class="thead-light">
+							<tr>
+								<th>No</th>
+								<th>
+									<th:block
+										th:replace="~{fragment/admin/account/filter :: filter(name = 'Name', page = ${page},
+										 limit = ${limit}, sort = 'name', order = ${reveser}, role = ${role}, search = ${search})}"></th:block>
+								</th>
+
+								<th>
+									<th:block
+										th:replace="~{fragment/admin/account/filter :: filter(name = 'Email', page = ${page},
+										 limit = ${limit}, sort = 'email', order = ${reveser}, role = ${role}, search = ${search})}"></th:block>
+								</th>
+								<th>
+									<div class="dropdown">
+										<a href="#" class="dropdown-toggle text-primary"
+											id="dropdownMenu2" data-toggle="dropdown"
+											aria-haspopup="true" aria-expanded="false">Role</a>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+											<a class="dropdown-item"
+												th:href="@{/admin/accounts(role = '-1')}">---None---</a>
+											<a class="dropdown-item text-primary"
+												th:href="@{/admin/accounts(role = '1')}">Admin</a>
+											<a class="dropdown-item text-warning"
+												th:href="@{/admin/accounts(role = '0')}">Customer</a>
+										</div>
+									</div>
+								</th>
+
+
+								<th>Status</th>
+								<th>
+									<th:block
+										th:replace="~{fragment/admin/account/filter :: filter(name = 'Date', page = ${page},
+										 limit = ${limit}, sort = 'createAt', order = ${reveser}, role = ${role}, search = ${search})}"></th:block>
+								</th>
+								<th>
+									<span class="text-danger">Delete?</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="account, state : ${accounts}">
+								<td>[[${(page - 1) * limit + state.count}]]</td>
+								<td>
+									<a th:href="@{/admin/accounts/{id}(id = ${account.id})}">
+										[[${account.name}]] </a>
+								</td>
+								<td>
+									<a href="#" class="text-primary" data-toggle="modal"
+										th:data-target="'#mailModal' + ${account.id}">[[${account.email}]]</a>
+									<div class="modal fade" th:id="'mailModal' + ${account.id}"
+										tabindex="-1" role="dialog" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title text-bold" id="exampleModalLabel">Send
+														Mail</h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<p>From: My Shop</p>
+													<p>To: [[${account.email}]]</p>
+
+													<div class="form-group">
+														<label>Body</label>
+														<textarea class="form-control" rows="5"></textarea>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary"
+														data-dismiss="modal">Close</button>
+													<a
+														th:href="@{/admin/accounts/delete/{id}(id = ${account.id})}"
+														class="btn btn-primary">Send</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+
+								<td>
+									<span th:if="${account.role == 1}" class="badge badge-primary">Admin</span>
+									<span th:if="${account.role == 0}" class="badge badge-warning">Customer</span>
+									<span th:if="${session.account.id == account.id}"
+										class="badge badge-success">Me</span>
+
+								</td>
+								<td>
+									<span th:if="${account.status == 1}"
+										class="badge badge-success">Active</span>
+									<span th:unless="${account.status == 1}"
+										class="badge badge-danger">Deactive</span>
+								</td>
+								<td>[[${account.createAt}]]</td>
+
+								<td>
+									<button data-toggle="modal"
+										th:data-target="'#deleteModal' + ${account.id}"
+										class="btn btn-default mx-auto shadow bg-white rounded">
+										<i class="fas fa-trash text-danger"></i>
+									</button>
+									<!-- Modal -->
+									<div class="modal fade" th:id="'deleteModal' + ${account.id}"
+										tabindex="-1" role="dialog" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title text-bold" id="exampleModalLabel">Delete
+														account</h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<span th:if="${session.account.id==account.id}">Can
+														not delete your self?</span>
+
+													<th:block th:unless="${session.account.id==account.id}">
+													Are you sure delete
+													<span class="text-danger">[[${account.name}]]</span>
+													?
+													<br>
+														<span class="text-danger">*Warning: </span>
+													Deleting this account may result in loss of related data!
+													</th:block>
+
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary"
+														data-dismiss="modal">Close</button>
+													<a th:unless="${session.account.id==account.id}"
+														th:href="@{/admin/accounts/delete/{id}(id = ${account.id})}"
+														class="btn btn-danger">Delete</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="card-footer">
+					<div th:if="${accounts.size > 0}"
+						class="d-flex justify-content-start align-items-center">
+						<button th:if="${response.first}"
+							class="btn btn-light mx-1 disabled">Prev</button>
+						<button th:unless="${response.first}" class="btn btn-light mx-1">
+							<th:block
+								th:replace="~{fragment/admin/account/filter :: filter(name = 'Prev', page = ${page - 1},
+										 limit = ${limit}, sort = ${sort}, order = ${order}, role = ${role},
+										   search = ${search})}"></th:block>
+						</button>
+						<button th:if="${response.last}"
+							class="btn btn-light mx-1 disabled">Next</button>
+						<button th:unless="${response.last}" class="btn btn-light mx-1">
+							<th:block
+								th:replace="~{fragment/admin/account/filter :: filter(name = 'Next', page = ${page + 1},
+										 limit = ${limit}, sort = ${sort}, order = ${order}, role = ${role},
+										   search = ${search})}"></th:block>
+						</button>
+
+						<span class="mx-1">Page [[${page}]] / [[${totalPages}]]</span>
+
+					</div>
+				</div>
+
+			</div>
+			<div th:unless="${accounts.size > 0}" class="my-5">
+				<span class="text-muted h4">No Result...</span>
+			</div>
+
+		</table>
+</body>
+</html>

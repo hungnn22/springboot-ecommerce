@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="site-content">
+		<th:block th:replace="~{fragment/site/home/preloader :: preloader}"></th:block>
+
+
+		<img
+			src="https://res.cloudinary.com/hungnn22cloudinary/image/upload/v1634285332/banner_oazvjl.jpg"
+			alt="" class="img-header">
+		<th:block
+			th:replace="~{fragment/site/home/small-banner :: small-banner}"></th:block>
+		<th:block
+			th:replace="~{fragment/site/home/product-area :: product-area(data = 'Trending Items')}"></th:block>
+		<th:block
+			th:replace="~{fragment/site/home/midium-banner :: midium-banner}"></th:block>
+		<th:block
+			th:replace="~{fragment/site/home/most-popular :: most-popular}"></th:block>
+		<!-- <th:block th:replace="~{fragment/site/home/home-list :: home-list}"></th:block> -->
+		<th:block th:replace="~{fragment/site/home/cown-down :: cown-down}"></th:block>
+		<th:block th:replace="~{fragment/site/home/blog :: blog}"></th:block>
+		<th:block th:replace="~{fragment/site/home/service :: service}"></th:block>
+		<th:block th:replace="~{fragment/site/home/new :: new}"></th:block>
+
+
+	</th:block>
+
+</body>
+</html>

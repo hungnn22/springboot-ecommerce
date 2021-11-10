@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/admin-layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="admin-content">
+		<th:block
+			th:replace="~{fragment/admin/breadcrumb :: breadcrumb(breadPara = 'Order List')}"></th:block>
+		<table class="table">
+			<div class="card">
+				<div
+					class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+
+
+					<div class="dropdown">
+						<a class="btn btn-danger btn-sm" href="#" id="limitlist"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Show Option
+							<i class="fas fa-chevron-right"></i>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="limitlist">
+							<a class="dropdown-item" th:href="@{/admin/orders}">5</a>
+							<a class="dropdown-item" th:href="@{/admin/orders(limit = '10')}">10</a>
+							<a class="dropdown-item" th:href="@{/admin/orders(limit = '20')}">20</a>
+							<a class="dropdown-item" th:href="@{/admin/orders(limit = '50')}">50</a>
+						</div>
+					</div>
+				</div>
+				<div class="table-responsive mh-100">
+					<table class="table align-items-center table-flush">
+						<thead class="thead-light">
+							<tr>
+								<th>ID</th>
+								<th>View</th>
+								<th>Customer Name</th>
+								<th>
+									<th:block
+										th:replace="~{fragment/admin/order/filter :: filter(name = 'Date', page = ${page},
+										 limit = ${limit}, sort = 'createAt', order = ${reveser}, accountId = ${accountId}, search = ${search})}"></th:block>
+								</th>
+								<th>Phone</th>
+								<th>
+									<th:block
+										th:replace="~{fragment/admin/order/filter :: filter(name = 'Address', page = ${page},
+										 limit = ${limit}, sort = 'address', order = ${reveser}, accountId = ${accountId}, search = ${search})}"></th:block>
+								</th>
+								<th>Note</th>
+								<th>Total</th>
+								<th>
+									<div class="dropdown">
+										<a class="dropdown-toggle text-primary" id="dropdownMenu2"
+											data-toggle="dropdown" aria-haspopup="true"
+											aria-expanded="false">Status </a>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+											<a class="dropdown-item" th:href="@{/admin/orders}">All</a>
+											<a th:each="status : ${statusList}" class="dropdown-item"
+												th:href="@{/admin/orders(statusId = ${status.id})}">
+												[[${status.value}]] </a>
+										</div>
+									</div>
+								</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody th:if="${orders.size > 0}">
+							<tr th:each="order, state : ${orders}">
+								<td>
+
+									[[${order.id}]]
+
+
+
+									<div class="modal fade" th:id="'detail' + ${order.id}"
+										tabindex="-1" role="dialog" aria-hidden="true">
+										<div class="modal-dialog modal-lg" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title text-bold" id="exampleModalLabel">Order
+														Detail</h5>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<table class="table">
+														<thead>
+															<tr>
+																<th>No</th>
+																<th>Product</th>
+																<th>Size</th>
+																<th>Color</th>
+																<th>Price</th>
+																<th>Quantity</th>
+																<th>Total</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr th:each="item, state : ${order.details}">
+																<td>[[${state.count}]]</td>
+																<td>[[${item.product.name}]]</td>
+																<td>[[${item.product.size.value}]]</td>
+																<td>[[${item.product.color.name}]]</td>
+																<td>[[${item.price}]]</td>
+																<td>[[${item.qty}]]</td>
+																<td>[[${item.price * item.qty}]]</td>
+															</tr>
+														</tbody>
+														<tfoot>
+															<tr>
+																<th colspan="6"></th>
+																<th>
+																	<b>$[[${order.total}]]</b>
+																</th>
+															</tr>
+														</tfoot>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+								<td>
+									<a data-toggle="modal" th:data-target="'#detail' + ${order.id}"
+										href="#">
+										<i class="fa fa-eye" aria-hidden="true"></i>
+									</a>
+								</td>
+								<td>
+									<a class=""
+										th:href="@{/admin/accounts/{id}(id = ${order.account.id})}">[[${order.account.name}]]</a>
+								</td>
+								<td>[[${order.createAt}]]</td>
+								<td>[[${order.phone}]]</td>
+								<td>[[${order.address}]]</td>
+								<td>[[${order.note}]]</td>
+								<td>$[[${order.total}]]</td>
+								<td>
+									<th:block th:switch="${order.status.id}">
+										<span th:case="'1'" class="badge badge-info">Processing</span>
+										<span th:case="'2'" class="badge badge-warning">Pending</span>
+										<span th:case="'3'" class="badge badge-success">Confirmed</span>
+										<span th:case="'4'" class="badge badge-danger">Rejected</span>
+									</th:block>
+
+
+								</td>
+								<td>
+									<a th:if="${order.status.id == 2}"
+										th:href="@{/orders/update/confirm(orderId = ${order.id})}"
+										class="btn btn-sm btn-success">Confirm</a>
+									<button th:unless="${order.status.id == 2}"
+										class="btn btn-sm btn-success disabled">Confirm</button>
+									<a th:if="${order.status.id == 2}"
+										th:href="@{/orders/update/reject(orderId = ${order.id})}"
+										class="btn btn-sm btn-danger">Reject</a>
+									<button th:unless="${order.status.id == 2}"
+										class="btn btn-sm btn-danger disabled">Reject</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div th:unless="${orders.size > 0}" class="my-5">
+						<span class="text-muted h4">No Result...</span>
+					</div>
+				</div>
+				<div class="card-footer">
+					<div th:if="${orders.size > 0}"
+						class="d-flex justify-content-start align-items-center">
+						<button th:if="${response.first}"
+							class="btn btn-light mx-1 disabled">Prev</button>
+						<button th:unless="${response.first}" class="btn btn-light mx-1">
+							<th:block
+								th:replace="~{fragment/admin/order/filter :: filter(name = 'Prev', page = ${page - 1},
+										 limit = ${limit}, sort = ${sort}, order = ${order}, accountId = ${accountId}, search = ${search})}"></th:block>
+						</button>
+						<button th:if="${response.last}"
+							class="btn btn-light mx-1 disabled">Next</button>
+						<button th:unless="${response.last}" class="btn btn-light mx-1">
+							<th:block
+								th:replace="~{fragment/admin/order/filter :: filter(name = 'Next', page = ${page + 1},
+										 limit = ${limit}, sort = ${sort}, order = ${order}, accountId = ${accountId}, search = ${search})}"></th:block>
+						</button>
+						<span class="mx-1">Page [[${page}]] / [[${totalPages}]]</span>
+
+					</div>
+				</div>
+
+			</div>
+
+		</table>
+	</th:block>
+</body>
+</html>

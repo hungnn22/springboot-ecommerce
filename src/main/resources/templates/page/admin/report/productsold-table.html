@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/admin-layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="admin-content">
+		<th:block
+			th:replace="~{fragment/admin/breadcrumb :: breadcrumb(breadPara = 'Report: Product Sold')}"></th:block>
+
+		<div class="card mb-4">
+			<div
+				class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+				<h6 class="m-0 font-weight-bold text-primary">
+					<a th:href="@{/admin/reports/productsold}" class="text-light">
+						<i class="fa fa-tasks" aria-hidden="true"></i>
+					</a>
+					/
+					<a th:href="@{/admin/reports/productsold(view='table')}">
+						<i class="fa fa-table" aria-hidden="true"></i>
+					</a>
+				</h6>
+				<div class="dropdown no-arrow">
+					<a class="dropdown-toggle btn btn-primary btn-sm" href="#"
+						role="button" id="dropdownMenuLink" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false">
+						Time Option
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div
+						class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+						aria-labelledby="dropdownMenuLink">
+						<div class="dropdown-header">Select Periode</div>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(view = 'table')}">Today</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(time = 'week', view = 'table')}">Week</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(time = 'month', view = 'table')}">Month</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(time = 'year', view = 'table')}">This
+							Year</a>
+					</div>
+				</div>
+			</div>
+			<div class="card-body">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>No</th>
+							<th>Product Name</th>
+							<th>Sold/Quantity</th>
+							<th>Revenue</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item, state : ${reports}">
+							<td>[[${state.count}]]</td>
+							<td>
+								<a th:href="@{/admin/products/{id}(id = ${item[0]})}">[[${item[1]}]]</a>
+							</td>
+							<td>[[${item[3]}]] / [[${item[2]}]]</td>
+							<td>$[[${item[4]}]]</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer d-flex">
+				<div class="dropdown">
+					<a class="btn btn-danger btn-sm" href="#" id="limitlist"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Show Option
+						<i class="fas fa-chevron-right"></i>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="limitlist">
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(view = 'table', time = ${time})}">5</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(limit = '10', view = 'table', time = ${time})}">10</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(limit = '20', view = 'table', time = ${time})}">20</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/productsold(limit = '50', view = 'table', time = ${time})}">50</a>
+					</div>
+				</div>
+				<a class="btn btn-outline-primary btn-sm mx-2"
+					th:href="@{/admin/reports/productsold/export(time = ${time})}">
+					Export </a>
+				<!-- 				<div th:if="${reports.size > 0}"
+					class="d-flex justify-content-start align-items-center">
+					<button th:if="${response.first}"
+						class="btn btn-light mx-1 disabled">Prev</button>
+					<button th:unless="${response.first}" class="btn btn-light mx-1">
+						<th:block
+							th:replace="~{fragment/admin/order/filter :: filter(name = 'Prev', page = ${page - 1},
+										 limit = ${limit}, sort = ${sort}, order = ${order}, accountId = ${accountId}, search = ${search})}"></th:block>
+					</button>
+					<button th:if="${response.last}"
+						class="btn btn-light mx-1 disabled">Next</button>
+					<button th:unless="${response.last}" class="btn btn-light mx-1">
+						<th:block
+							th:replace="~{fragment/admin/order/filter :: filter(name = 'Next', page = ${page + 1},
+										 limit = ${limit}, sort = ${sort}, order = ${order}, accountId = ${accountId}, search = ${search})}"></th:block>
+					</button>
+					<span class="mx-1">Page [[${page}]] / [[${totalPages}]]</span>
+				</div> -->
+			</div>
+	</th:block>
+</body>
+</html>

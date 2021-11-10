@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="site-content">
+		<th:block
+			th:replace="~{fragment/site/breadcrumb :: breadcrumb(data = 'Shop detail')}"></th:block>
+		<th:block
+			th:replace="~{fragment/site/product/detail/single :: single(product = ${product})}"></th:block>
+
+		<th:block
+			th:replace="~{fragment/site/product/detail/related :: related}"></th:block>
+	</th:block>
+</body>
+</html>

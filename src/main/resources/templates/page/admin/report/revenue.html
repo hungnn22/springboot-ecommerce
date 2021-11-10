@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/admin-layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="admin-content">
+		<th:block
+			th:replace="~{fragment/admin/breadcrumb :: breadcrumb(breadPara = 'Report: Revenue')}"></th:block>
+
+		<div class="card mb-4">
+			<div
+				class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+				<div class="dropdown">
+					<a class="btn btn-outlint-light btn-sm" href="#" id="limitlist"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Status
+						<i class="fas fa-chevron-right"></i>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="limitlist">
+						<a class="dropdown-item text-success"
+							th:href="@{/admin/reports/revenue(year = ${year})}">Confirmed</a>
+						<a class="dropdown-item text-danger"
+							th:href="@{/admin/reports/revenue(statusId = '4', year = ${year})}">Reject</a>
+					</div>
+				</div>
+				<div class="dropdown no-arrow">
+					<a class="dropdown-toggle btn btn-primary btn-sm" href="#"
+						role="button" id="dropdownMenuLink" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false">
+						Select Year
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div
+						class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+						aria-labelledby="dropdownMenuLink">
+						<div class="dropdown-header">Select Year</div>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/revenue(statusId = ${statusId})}">2021</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/revenue(statusId = ${statusId}, year = '2020')}">2020</a>
+					</div>
+				</div>
+			</div>
+			<div class="card-body">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>No</th>
+							<th>Month</th>
+							<th>Revenue</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item, state : ${revenues}">
+							<td>[[${state.count}]]</td>
+							<td>[[${item[0]}]]</td>
+							<td>[[${item[1]}]]</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer d-flex">
+				<div class="dropdown">
+					<a class="btn btn-danger btn-sm" href="#" id="limitlist"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Show Option
+						<i class="fas fa-chevron-right"></i>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="limitlist">
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/revenue(statusId = ${statusId}, year = ${year})}">5</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/revenue(limit = '10', statusId = ${statusId}, year = ${year})}">10</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/revenue(limit = '20', statusId = ${statusId}, year = ${year})}">20</a>
+						<a class="dropdown-item"
+							th:href="@{/admin/reports/revenue(limit = '50', statusId = ${statusId}, year = ${year})}">50</a>
+					</div>
+				</div>
+				<!-- 				<div th:if="${reports.size > 0}"
+					class="d-flex justify-content-start align-items-center">
+					<button th:if="${response.first}"
+						class="btn btn-light mx-1 disabled">Prev</button>
+					<button th:unless="${response.first}" class="btn btn-light mx-1">
+						<th:block
+							th:replace="~{fragment/admin/order/filter :: filter(name = 'Prev', page = ${page - 1},
+										 limit = ${limit}, sort = ${sort}, order = ${order}, accountId = ${accountId}, search = ${search})}"></th:block>
+					</button>
+					<button th:if="${response.last}"
+						class="btn btn-light mx-1 disabled">Next</button>
+					<button th:unless="${response.last}" class="btn btn-light mx-1">
+						<th:block
+							th:replace="~{fragment/admin/order/filter :: filter(name = 'Next', page = ${page + 1},
+										 limit = ${limit}, sort = ${sort}, order = ${order}, accountId = ${accountId}, search = ${search})}"></th:block>
+					</button>
+					<span class="mx-1">Page [[${page}]] / [[${totalPages}]]</span>
+				</div> -->
+			</div>
+	</th:block>
+</body>
+</html>

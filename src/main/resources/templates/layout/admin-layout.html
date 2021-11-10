@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="utf-8">
+<title>Chan!!!</title>
+<base href="/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<link href="admin/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="admin/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css">
+<link href="admin/css/jassa-admin.min.css" rel="stylesheet">
+<script src="admin/js/jquery.min.js"></script>
+<script src="admin/js/bootstrap.bundle.min.js"></script>
+<script src="admin/js/jquery.easing.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	th:href="@{/admin/css/product.css}">
+<script src="admin/js/Chart.min.js"></script>
+<script src="admin/js/jassa-admin.min.js"></script>
+<script src="admin/js/chart-area-demo.js"></script>
+</head>
+<body id="page-top">
+	<div id="wrapper">
+		<th:block th:replace="~{fragment/admin/sidebar :: sidebar}"></th:block>
+		<div id="content-wrapper" class="d-flex flex-column">
+			<div id="content">
+				<th:block th:replace="~{fragment/admin/topbar :: topbar}"></th:block>
+				<div class="container-fluid" id="container-wrapper">
+					<th:block layout:fragment="admin-content"></th:block>
+					<th:block th:replace="~{fragment/admin/modallog :: modallog}"></th:block>
+				</div>
+			</div>
+			<th:block th:replace="~{fragment/admin/footer :: footer}"></th:block>
+		</div>
+	</div>
+	<a class="scroll-to-top rounded" href="#page-top">
+		<i class="fas fa-angle-up"></i>
+	</a>
+
+</body>
+</html>

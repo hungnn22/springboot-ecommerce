@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block th:fragment="product-sold-filter(name, page, limit)">
+		<form id="myForm" method="get"
+			th:action="@{/admin/{url}(url = ${endPoint})}">
+			<input th:if="${page != 1}" hidden="hidden" name="page"
+				th:value="${page != 1 ? page : ''}">
+			<input th:if="${limit != 5}" hidden="hidden" name="limit"
+				th:value="${limit}">
+			<a class="text-link"
+				onclick='this.parentNode.submit(); return false;' href="#">[[${name}]]</a>
+		</form>
+	</th:block>
+</body>
+</html>

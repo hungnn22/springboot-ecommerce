@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/admin-layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+	<th:block layout:fragment="admin-content">
+		<th:block
+			th:replace="~{fragment/admin/breadcrumb :: breadcrumb(breadPara = 'Edit Category')}"></th:block>
+		<table class="table">
+			<form class="card form" method="post" action="#"
+				th:action="@{/admin/categories/save}" th:object="${category}">
+				<p th:if="${sucMess}" class="text-success">[[${sucMess}]]</p>
+				<div class="row">
+					<div class="col-4">
+						<input class="form-control" th:field="*{id}" hidden="">
+						<div class="form-group mb-3">
+							<label>
+								Name
+								<span class="text-danger">*</span>
+							</label>
+							<input class="form-control" th:field="*{name}" min="4"
+								required="required">
+							<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+								class="text-danger" />
+						</div>
+
+
+					</div>
+					<div class="col px-5">
+						<hr>
+						<h6>More info...</h6>
+						<p>
+							<a class="text-primary"
+								th:href="@{/admin/products(categoryId = ${category.id})}">Product
+								List</a>
+						</p>
+					</div>
+				</div>
+				<div class="d-flex justify-content-start align-items-center mt-4">
+					<button class="btn btn-primary">Save</button>
+					<a class="btn btn-light mx-2" th:href="@{/admin/categories}">Back</a>
+				</div>
+
+			</form>
+		</table>
+
+	</th:block>
+</body>
+</html>

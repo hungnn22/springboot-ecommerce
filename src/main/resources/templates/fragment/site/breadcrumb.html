@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<!-- Breadcrumbs -->
+	<div class="breadcrumbs" th:fragment="breadcrumb(data)">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="bread-inner">
+						<ul class="bread-list">
+							<li>
+								<a th:href="@{/}">
+									Home
+									<i class="ti-arrow-right"></i>
+								</a>
+							</li>
+							<li class="active">
+								<a href="#">[[${data}]]</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Breadcrumbs -->
+</body>
+</html>

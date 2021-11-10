@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block layout:fragment="site-content">
+		<th:block
+			th:replace="~{fragment/site/breadcrumb :: breadcrumb(data = 'Shopping History')}"></th:block>
+		<div class="container py-4" style="min-height: 70vh">
+
+			<span class="h4">Shopping History</span>
+
+			<table class="table my-5">
+				<thead>
+					<tr class="">
+						<th>No</th>
+						<th>Date</th>
+						<th>Adress</th>
+						<th>Phone</th>
+						<th>Note</th>
+						<th>Total</th>
+						<th>Status</th>
+						<th class="text-center">Detail</th>
+						<th class="text-danger text-center">Reject?</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="order, state : ${orders}">
+						<td>[[${state.count}]]</td>
+						<td>[[${order.createAt}]]</td>
+						<td>[[${order.address ?: 'Loading...'}]]</td>
+						<td>[[${order.phone ?: 'Loading...'}]]</td>
+						<td>[[${order.note ?: 'Loading...'}]]</td>
+						<td>[[${#numbers.formatCurrency(order.total)}]]</td>
+						<td>
+							<th:block th:switch="${order.status.id}">
+								<span th:case="'1'" class="">Process..</span>
+								<span th:case="'2'" class="text-info">Pending</span>
+								<span th:case="'3'" class="text-success">Confirmed</span>
+								<span th:case="'4'" class="text-danger">Reject</span>
+							</th:block>
+						</td>
+						<td class="text-center">
+							<a th:href="@{/}" data-toggle="modal" class="text-primary"
+								th:data-target="'#exampleModal' + ${order.id}">
+								<i class="ti-eye"></i>
+							</a>
+
+							<div class="modal fade" th:id="'exampleModal' + ${order.id}"
+								tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+								aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal"
+												aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body">
+											<table class="table">
+												<thead>
+													<tr>
+														<th>No</th>
+														<th>Product</th>
+														<th>Name</th>
+														<th>Color</th>
+														<th>Size</th>
+														<th>Quantity</th>
+														<th>Price</th>
+														<th>Total</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="item, state : ${order.details}">
+														<td>[[${state.count}]]</td>
+														<td>
+															<img alt="" th:src="${item.product.photos[0].url}"
+																style="width: 6rem; height: 6rem; object-fit: cover">
+														</td>
+														<td>
+															<a class="text-primary"
+																th:href="@{/products(id = ${item.product.id})}">[[${item.product.name}]]</a>
+														</td>
+														<td>[[${item.product.color.name}]]</td>
+														<td>[[${item.product.size.value}]]</td>
+														<td>[[${item.qty}]]</td>
+														<td>[[${#numbers.formatCurrency(item.price)}]]</td>
+														<td>[[${#numbers.formatCurrency(item.price *
+															item.qty)}]]</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary"
+												data-dismiss="modal">Close</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</td>
+						<td class="text-center">
+							<a th:if="${order.status.id == 2}" class="text-danger"
+								th:href="@{/orders/update/reject(orderId = ${order.id})}">
+								<i class="fa fa-ban" aria-hidden="true"></i>
+							</a>
+							<span th:unless="${order.status.id == 2}" class="text-muted">
+								<i class="fa fa-ban" aria-hidden="true"></i>
+							</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<!--/ End Shopping Summery -->
+			<div class="d-flex justify-content-start align-items-center">
+				<button th:if="${response.first}"
+					class="btn btn-warning mx-1 disabled">Prev</button>
+				<button th:unless="${response.first}" class="btn btn-warning mx-1">
+					<a class="" th:href="@{/orders(page = ${page - 1})}">Next</a>
+				</button>
+				<button th:if="${response.last}"
+					class="btn btn-warning mx-1 disabled">Next</button>
+				<button th:unless="${response.last}" class="btn btn-warning mx-1">
+					<a class="" th:href="@{/orders(page = ${page + 1})}">Next</a>
+				</button>
+
+
+
+				<span class="mx-1">Page [[${page}]] / [[${totalPages}]]</span>
+
+			</div>
+		</div>
+
+	</th:block>
+</body>
+</html>
